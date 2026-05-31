@@ -1,0 +1,9 @@
+{
+  "uuid": "gnomeethyst@local",
+  "name": "Gnomeethyst",
+  "description": "Amethyst-style dynamic tiling for GNOME Shell.",
+  "shell-version": ["50"],
+  "settings-schema": "org.gnome.shell.extensions.gnomeethyst",
+  "url": "https://github.com/mmv08/gnomeethyst",
+  "version": 1
+}

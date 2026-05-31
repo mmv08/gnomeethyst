@@ -1,0 +1,12 @@
+# Node/build outputs
+node_modules/
+dist/
+dist-tests/
+*.zip
+
+# GNOME generated schema output
+gschemas.compiled
+
+# Logs and local noise
+*.log
+.DS_Store

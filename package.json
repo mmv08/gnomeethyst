@@ -1,0 +1,25 @@
+{
+  "name": "gnomeethyst",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Amethyst-style dynamic tiling for GNOME Shell.",
+  "license": "MIT",
+  "scripts": {
+    "build": "npm run build:extension && npm run build:schema",
+    "build:extension": "node esbuild.mjs",
+    "build:schema": "mkdir -p dist/schemas && cp schemas/*.xml dist/schemas/ && glib-compile-schemas dist/schemas",
+    "build:test": "node esbuild.tests.mjs",
+    "test": "npm run build:test && node --test dist-tests/*.test.mjs",
+    "typecheck": "tsc --noEmit",
+    "verify": "npm run typecheck && npm test && npm run build",
+    "install:extension": "npm run build && mkdir -p ~/.local/share/gnome-shell/extensions/gnomeethyst@local && cp -r dist/* ~/.local/share/gnome-shell/extensions/gnomeethyst@local/",
+    "pack": "npm run build && cd dist && gnome-extensions pack --force"
+  },
+  "devDependencies": {
+    "@girs/gjs": "4.0.4",
+    "@girs/gnome-shell": "50.0.0",
+    "esbuild": "0.28.0",
+    "typescript": "6.0.3"
+  }
+}

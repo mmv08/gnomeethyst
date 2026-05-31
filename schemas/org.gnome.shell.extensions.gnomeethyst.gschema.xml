@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.gnomeethyst" path="/org/gnome/shell/extensions/gnomeethyst/">
+    <key name="tiling-enabled" type="b">
+      <default>true</default>
+      <summary>Enable dynamic tiling</summary>
+      <description>Whether Gnomeethyst should actively tile managed windows.</description>
+    </key>
+    <key name="current-layout" type="s">
+      <default>'tall'</default>
+      <summary>Current layout</summary>
+      <description>The active layout key.</description>
+    </key>
+    <key name="layout-cycle" type="as">
+      <default>['tall', 'fullscreen', 'wide', 'column', '3column-mid-focus', '5column-middle']</default>
+      <summary>Layout cycle</summary>
+      <description>Layouts cycled by the forward and backward layout commands.</description>
+    </key>
+    <key name="main-pane-ratio" type="d">
+      <default>0.5</default>
+      <summary>Main pane ratio</summary>
+      <description>Ratio of the main pane in paned layouts.</description>
+    </key>
+    <key name="main-pane-count" type="i">
+      <default>1</default>
+      <summary>Main pane count</summary>
+      <description>Number of windows assigned to the main pane.</description>
+    </key>
+    <key name="inner-gap" type="i">
+      <default>0</default>
+      <summary>Inner gap</summary>
+      <description>Gap between tiled windows, in logical pixels.</description>
+    </key>
+    <key name="outer-gap" type="i">
+      <default>0</default>
+      <summary>Outer gap</summary>
+      <description>Gap between tiled windows and the work area edge, in logical pixels.</description>
+    </key>
+
+    <key name="cycle-layout-forward" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;space']</default>
+      <summary>Cycle layout forward</summary>
+    </key>
+    <key name="cycle-layout-backward" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;&lt;Shift&gt;space']</default>
+      <summary>Cycle layout backward</summary>
+    </key>
+    <key name="select-tall-layout" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;a']</default>
+      <summary>Select Tall layout</summary>
+    </key>
+    <key name="select-wide-layout" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;s']</default>
+      <summary>Select Wide layout</summary>
+    </key>
+    <key name="select-fullscreen-layout" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;d']</default>
+      <summary>Select Fullscreen layout</summary>
+    </key>
+    <key name="select-column-layout" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;f']</default>
+      <summary>Select Column layout</summary>
+    </key>
+    <key name="select-3column-mid-focus-layout" type="as">
+      <default>[]</default>
+      <summary>Select 3Column Mid Focus layout</summary>
+    </key>
+    <key name="select-5column-middle-layout" type="as">
+      <default>[]</default>
+      <summary>Select 5Column Middle layout</summary>
+    </key>
+    <key name="shrink-main" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;h']</default>
+      <summary>Shrink main pane</summary>
+    </key>
+    <key name="expand-main" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;l']</default>
+      <summary>Expand main pane</summary>
+    </key>
+    <key name="increase-main" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;comma']</default>
+      <summary>Increase main pane count</summary>
+    </key>
+    <key name="decrease-main" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;period']</default>
+      <summary>Decrease main pane count</summary>
+    </key>
+    <key name="focus-prev" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;j']</default>
+      <summary>Focus previous window</summary>
+    </key>
+    <key name="focus-next" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;k']</default>
+      <summary>Focus next window</summary>
+    </key>
+    <key name="swap-prev" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;&lt;Shift&gt;j']</default>
+      <summary>Swap previous window</summary>
+    </key>
+    <key name="swap-next" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;&lt;Shift&gt;k']</default>
+      <summary>Swap next window</summary>
+    </key>
+    <key name="swap-main" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;Return']</default>
+      <summary>Swap focused window with main</summary>
+    </key>
+    <key name="toggle-float" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;t']</default>
+      <summary>Toggle floating for focused window</summary>
+    </key>
+    <key name="toggle-tiling" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;&lt;Shift&gt;t']</default>
+      <summary>Toggle tiling</summary>
+    </key>
+    <key name="reflow" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;z']</default>
+      <summary>Reflow windows</summary>
+    </key>
+    <key name="display-current-layout" type="as">
+      <default>['&lt;Control&gt;&lt;Alt&gt;i']</default>
+      <summary>Display current layout</summary>
+    </key>
+  </schema>
+</schemalist>
