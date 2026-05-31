@@ -62,7 +62,7 @@ function rectFromMtk(rect: Mtk.Rectangle): Rect {
 export class ReflowController {
   private readonly signals = new SignalStore();
   private readonly state = new WorkspaceStateStore();
-  private readonly windowSignals = new Map<Meta.Window, number>();
+  private readonly windowSignals = new Map<Meta.Window, number[]>();
   private reflowTimerId = 0;
   private applyingFrames = false;
   private layoutChangedCallback: ((layoutName: string, enabled: boolean) => void) | null =
@@ -80,7 +80,7 @@ export class ReflowController {
       'active-workspace-changed',
       () => this.scheduleReflow(),
     );
-    this.signals.connect(Main.layoutManager, 'workareas-changed', () =>
+    this.signals.connect(global.display, 'workareas-changed', () =>
       this.scheduleReflow(),
     );
     this.signals.connect(windowManager(), 'minimize', () => this.scheduleReflow());
@@ -117,7 +117,9 @@ export class ReflowController {
       GLib.source_remove(this.reflowTimerId);
       this.reflowTimerId = 0;
     }
-    this.windowSignals.forEach((signalId, window) => window.disconnect(signalId));
+    this.windowSignals.forEach((signalIds, window) => {
+      signalIds.forEach((signalId) => window.disconnect(signalId));
+    });
     this.windowSignals.clear();
     this.signals.disconnectAll();
     this.state.reset();
@@ -277,11 +279,16 @@ export class ReflowController {
 
   private watchWindow(window: Meta.Window): void {
     if (this.windowSignals.has(window)) return;
-    const signalId = window.connect('unmanaged', () => {
-      this.windowSignals.delete(window);
-      this.scheduleReflow();
-    });
-    this.windowSignals.set(window, signalId);
+    const signalIds = [
+      window.connect('unmanaged', () => {
+        this.windowSignals.delete(window);
+        this.scheduleReflow();
+      }),
+      window.connect('shown', () => this.scheduleReflow()),
+      window.connect('position-changed', () => this.scheduleReflow()),
+      window.connect('size-changed', () => this.scheduleReflow()),
+    ];
+    this.windowSignals.set(window, signalIds);
   }
 
   private focusedScopeContext(): FocusedScopeContext {
