@@ -2,6 +2,10 @@
 
 [Amethyst](https://github.com/ianyh/amethyst)-style dynamic tiling for GNOME Shell.
 
+## Demo
+
+![Cycling through Gnomeethyst layouts](assets/demo.gif)
+
 ## Development
 
 ```bash
