@@ -54,11 +54,7 @@ export type LayoutState = {
 export interface DynamicLayout {
   key: LayoutKey;
   name: string;
-  assign(
-    windows: ManagedWindow[],
-    workArea: Rect,
-    state: LayoutState,
-  ): Map<string, Rect>;
+  assign(windows: ManagedWindow[], workArea: Rect, state: LayoutState): Map<string, Rect>;
 }
 
 /**
@@ -108,10 +104,7 @@ export function assignAll(windows: ManagedWindow[], rect: Rect): Map<string, Rec
  * @example
  * Two windows in `{ x: 0, y: 0, width: 100, height: 80 }` receive heights of 40.
  */
-export function stackVertically(
-  windows: ManagedWindow[],
-  frame: Rect,
-): Map<string, Rect> {
+export function stackVertically(windows: ManagedWindow[], frame: Rect): Map<string, Rect> {
   const assignments = new Map<string, Rect>();
   if (windows.length === 0) return assignments;
 
@@ -134,10 +127,7 @@ export function stackVertically(
  * @example
  * Two windows in `{ x: 0, y: 0, width: 100, height: 80 }` receive widths of 50.
  */
-export function stackHorizontally(
-  windows: ManagedWindow[],
-  frame: Rect,
-): Map<string, Rect> {
+export function stackHorizontally(windows: ManagedWindow[], frame: Rect): Map<string, Rect> {
   const assignments = new Map<string, Rect>();
   if (windows.length === 0) return assignments;
 
@@ -161,12 +151,12 @@ export function stackHorizontally(
  * Later maps win on duplicate ids, which is useful for layouts that place the
  * main window explicitly between side-pane assignments.
  */
-export function mergeAssignments(
-  ...maps: Array<Map<string, Rect>>
-): Map<string, Rect> {
+export function mergeAssignments(...maps: Array<Map<string, Rect>>): Map<string, Rect> {
   const merged = new Map<string, Rect>();
   maps.forEach((map) => {
-    map.forEach((rect, windowId) => merged.set(windowId, rect));
+    map.forEach((rect, windowId) => {
+      merged.set(windowId, rect);
+    });
   });
   return merged;
 }

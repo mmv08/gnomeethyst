@@ -1,11 +1,6 @@
-import Gio from 'gi://Gio';
+import type Gio from 'gi://Gio';
 import { DEFAULT_LAYOUT_CYCLE, isLayoutKey } from './layouts/registry';
-import {
-  clampMainPaneCount,
-  clampRatio,
-  type LayoutKey,
-  type LayoutState,
-} from './layouts/types';
+import { clampMainPaneCount, clampRatio, type LayoutKey, type LayoutState } from './layouts/types';
 
 /**
  * GSettings key names that are registered as GNOME Shell keybindings.
@@ -66,18 +61,14 @@ export class GnomeethystSettings {
   }
 
   get layoutCycle(): LayoutKey[] {
-    const configured = this.settings
-      .get_strv('layout-cycle')
-      .filter(isLayoutKey);
+    const configured = this.settings.get_strv('layout-cycle').filter(isLayoutKey);
     return configured.length > 0 ? configured : DEFAULT_LAYOUT_CYCLE;
   }
 
   get layoutState(): LayoutState {
     return {
       mainPaneRatio: clampRatio(this.settings.get_double('main-pane-ratio')),
-      mainPaneCount: clampMainPaneCount(
-        this.settings.get_int('main-pane-count'),
-      ),
+      mainPaneCount: clampMainPaneCount(this.settings.get_int('main-pane-count')),
     };
   }
 

@@ -20,17 +20,10 @@ import {
 export const columnLayout: DynamicLayout = {
   key: 'column',
   name: 'Column',
-  assign(
-    windows: ManagedWindow[],
-    workArea: Rect,
-    state: LayoutState,
-  ): Map<string, Rect> {
+  assign(windows: ManagedWindow[], workArea: Rect, state: LayoutState): Map<string, Rect> {
     if (windows.length === 0) return new Map();
 
-    const mainPaneCount = Math.min(
-      windows.length,
-      clampMainPaneCount(state.mainPaneCount),
-    );
+    const mainPaneCount = Math.min(windows.length, clampMainPaneCount(state.mainPaneCount));
     const mainWindows = windows.slice(0, mainPaneCount);
     const secondaryWindows = windows.slice(mainPaneCount);
     const hasSecondaryPane = secondaryWindows.length > 0;

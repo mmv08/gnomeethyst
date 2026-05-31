@@ -46,10 +46,10 @@ function workspaceManager(): {
   connect(signal: string, callback: (...args: unknown[]) => void): number;
   disconnect(id: number): void;
 } {
-  return (
-    (global as unknown as { workspaceManager?: unknown }).workspaceManager ??
-    (global as unknown as { workspace_manager: unknown }).workspace_manager
-  ) as ReturnType<typeof workspaceManager>;
+  return ((global as unknown as { workspaceManager?: unknown }).workspaceManager ??
+    (global as unknown as { workspace_manager: unknown }).workspace_manager) as ReturnType<
+    typeof workspaceManager
+  >;
 }
 
 /**
@@ -58,10 +58,8 @@ function workspaceManager(): {
  * @internal
  */
 function windowManager(): WindowManagerLike {
-  return (
-    (global as unknown as { windowManager?: unknown }).windowManager ??
-    (global as unknown as { window_manager: unknown }).window_manager
-  ) as WindowManagerLike;
+  return ((global as unknown as { windowManager?: unknown }).windowManager ??
+    (global as unknown as { window_manager: unknown }).window_manager) as WindowManagerLike;
 }
 
 /**
@@ -93,8 +91,7 @@ export class ReflowController {
   private readonly windowSignals = new Map<Meta.Window, number[]>();
   private reflowTimerId = 0;
   private applyingFrames = false;
-  private layoutChangedCallback: ((layoutName: string, enabled: boolean) => void) | null =
-    null;
+  private layoutChangedCallback: ((layoutName: string, enabled: boolean) => void) | null = null;
 
   constructor(private readonly settings: GnomeethystSettings) {}
 
@@ -110,14 +107,10 @@ export class ReflowController {
       this.watchWindow(window as Meta.Window);
       this.scheduleReflow();
     });
-    this.signals.connect(
-      workspaceManager(),
-      'active-workspace-changed',
-      () => this.scheduleReflow(),
-    );
-    this.signals.connect(global.display, 'workareas-changed', () =>
+    this.signals.connect(workspaceManager(), 'active-workspace-changed', () =>
       this.scheduleReflow(),
     );
+    this.signals.connect(global.display, 'workareas-changed', () => this.scheduleReflow());
     this.signals.connect(windowManager(), 'minimize', () => this.scheduleReflow());
     this.signals.connect(windowManager(), 'unminimize', () => this.scheduleReflow());
 
@@ -129,16 +122,12 @@ export class ReflowController {
       'inner-gap',
       'outer-gap',
     ].forEach((key) => {
-      this.signals.connect(
-        this.settings.settings,
-        `changed::${key}`,
-        () => this.scheduleReflow(),
-      );
+      this.signals.connect(this.settings.settings, `changed::${key}`, () => this.scheduleReflow());
     });
 
-    global.get_window_actors().forEach((actor) =>
-      this.watchWindow(actor.metaWindow),
-    );
+    global.get_window_actors().forEach((actor) => {
+      this.watchWindow(actor.metaWindow);
+    });
     this.scheduleReflow();
   }
 
@@ -159,7 +148,9 @@ export class ReflowController {
       this.reflowTimerId = 0;
     }
     this.windowSignals.forEach((signalIds, window) => {
-      signalIds.forEach((signalId) => window.disconnect(signalId));
+      signalIds.forEach((signalId) => {
+        window.disconnect(signalId);
+      });
     });
     this.windowSignals.clear();
     this.signals.disconnectAll();
@@ -177,15 +168,11 @@ export class ReflowController {
     if (this.applyingFrames) return;
     if (this.reflowTimerId) GLib.source_remove(this.reflowTimerId);
 
-    this.reflowTimerId = GLib.timeout_add(
-      GLib.PRIORITY_DEFAULT,
-      REFLOW_DEBOUNCE_MS,
-      () => {
-        this.reflowTimerId = 0;
-        this.reflow();
-        return GLib.SOURCE_REMOVE;
-      },
-    );
+    this.reflowTimerId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, REFLOW_DEBOUNCE_MS, () => {
+      this.reflowTimerId = 0;
+      this.reflow();
+      return GLib.SOURCE_REMOVE;
+    });
   }
 
   /**
@@ -234,9 +221,7 @@ export class ReflowController {
   focusWindow(delta: -1 | 1): void {
     const { focusedId, state, windows } = this.focusedScopeContext();
     const nextId = nextIdInOrder(state.orderedWindowIds, focusedId, delta);
-    const nextWindow = nextId
-      ? windows.find((window) => windowId(window) === nextId)
-      : undefined;
+    const nextWindow = nextId ? windows.find((window) => windowId(window) === nextId) : undefined;
     if (nextWindow) Main.activateWindow(nextWindow, global.get_current_time());
   }
 
@@ -288,10 +273,7 @@ export class ReflowController {
    */
   displayCurrentLayout(): void {
     const layout = getLayout(this.settings.currentLayout);
-    Main.notify(
-      'Gnomeethyst',
-      `${layout.name}${this.settings.tilingEnabled ? '' : ' (off)'}`,
-    );
+    Main.notify('Gnomeethyst', `${layout.name}${this.settings.tilingEnabled ? '' : ' (off)'}`);
     this.emitLayoutChanged();
   }
 
@@ -328,19 +310,13 @@ export class ReflowController {
         const orderedWindows = state.orderedWindowIds
           .map((id) => windows.find((window) => windowId(window) === id))
           .filter((window): window is Meta.Window => window !== undefined);
-        const workArea = rectFromMtk(
-          Main.layoutManager.getWorkAreaForMonitor(monitorIndex),
-        );
+        const workArea = rectFromMtk(Main.layoutManager.getWorkAreaForMonitor(monitorIndex));
         const managedWindows: ManagedWindow[] = orderedWindows.map((window) => ({
           id: windowId(window),
           isFocused: window === global.display.focus_window,
         }));
         const layout = getLayout(state.layoutKey);
-        const assignments = layout.assign(
-          managedWindows,
-          workArea,
-          this.settings.layoutState,
-        );
+        const assignments = layout.assign(managedWindows, workArea, this.settings.layoutState);
 
         orderedWindows.forEach((window) => {
           const rect = assignments.get(windowId(window));
@@ -352,10 +328,7 @@ export class ReflowController {
         });
 
         if (state.layoutKey === 'fullscreen' && global.display.focus_window) {
-          Main.activateWindow(
-            global.display.focus_window,
-            global.get_current_time(),
-          );
+          Main.activateWindow(global.display.focus_window, global.get_current_time());
         }
       });
     } finally {
@@ -419,10 +392,7 @@ export class ReflowController {
   /**
    * Lists windows that belong to one workspace/monitor tiling scope.
    */
-  private windowsForScope(
-    workspace: Meta.Workspace,
-    monitorIndex: number,
-  ): Meta.Window[] {
+  private windowsForScope(workspace: Meta.Workspace, monitorIndex: number): Meta.Window[] {
     return workspace
       .list_windows()
       .filter((window) => window.get_monitor() === monitorIndex)

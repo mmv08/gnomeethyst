@@ -25,11 +25,7 @@ const SMALL_SCREEN_MAIN_WIDTH_RATIO = 0.55;
 export const threeColumnMidFocusLayout: DynamicLayout = {
   key: '3column-mid-focus',
   name: '3Column Mid Focus',
-  assign(
-    windows: ManagedWindow[],
-    workArea: Rect,
-    _state: LayoutState,
-  ): Map<string, Rect> {
+  assign(windows: ManagedWindow[], workArea: Rect, _state: LayoutState): Map<string, Rect> {
     if (windows.length === 0) return new Map();
 
     const mainWindow = windows[0]!;

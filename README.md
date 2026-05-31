@@ -1,6 +1,6 @@
 # Gnomeethyst
 
-Amethyst-style dynamic tiling for GNOME Shell.
+[Amethyst](https://github.com/ianyh/amethyst)-style dynamic tiling for GNOME Shell.
 
 ## Development
 
@@ -9,7 +9,15 @@ npm install
 npm run verify
 ```
 
-`verify` runs TypeScript typechecking, Node's built-in tests, and the GNOME extension build.
+`verify` runs Biome formatting/lint checks, TypeScript typechecking, Node's built-in tests, and the GNOME extension build.
+
+Useful focused checks:
+
+```bash
+npm run format
+npm run format:check
+npm run lint
+```
 
 ## Test Locally
 
@@ -61,4 +69,4 @@ If `gnome-extensions disable gnomeethyst@local` marks the extension disabled but
 
 ## Dependency Policy
 
-Gnomeethyst has no runtime npm dependencies. Dev dependencies are limited to TypeScript, esbuild, and GNOME/GJS type definitions.
+Gnomeethyst has no runtime npm dependencies. Dev dependencies are limited to TypeScript, esbuild, Biome, and GNOME/GJS type definitions.

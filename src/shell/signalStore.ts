@@ -14,11 +14,7 @@ type Connectable = {
 export class SignalStore {
   private readonly entries: Array<{ object: Connectable; id: number }> = [];
 
-  connect(
-    object: Connectable,
-    signal: string,
-    callback: (...args: unknown[]) => void,
-  ): void {
+  connect(object: Connectable, signal: string, callback: (...args: unknown[]) => void): void {
     this.entries.push({ object, id: object.connect(signal, callback) });
   }
 

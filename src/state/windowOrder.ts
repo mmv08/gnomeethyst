@@ -9,10 +9,7 @@
  * reconcileWindowOrder(['b', 'a', 'missing'], ['a', 'b', 'c'])
  * // => ['b', 'a', 'c']
  */
-export function reconcileWindowOrder(
-  existingIds: string[],
-  visibleIds: string[],
-): string[] {
+export function reconcileWindowOrder(existingIds: string[], visibleIds: string[]): string[] {
   const visible = new Set(visibleIds);
   const preserved = existingIds.filter((id) => visible.has(id));
   const known = new Set(preserved);
@@ -50,11 +47,7 @@ export function nextIdInOrder(
  *
  * @internal
  */
-export function swapInOrder(
-  ids: string[],
-  currentId: string,
-  delta: -1 | 1,
-): string[] {
+export function swapInOrder(ids: string[], currentId: string, delta: -1 | 1): string[] {
   const currentIndex = ids.indexOf(currentId);
   if (currentIndex === -1 || ids.length < 2) return ids;
 

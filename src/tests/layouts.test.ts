@@ -31,10 +31,7 @@ function rect(layout: DynamicLayout, id: string, count: number): Rect {
 function assertRect(actual: Rect, expected: Rect): void {
   assert.deepEqual(
     Object.fromEntries(
-      Object.entries(actual).map(([key, value]) => [
-        key,
-        Number(value.toFixed(4)),
-      ]),
+      Object.entries(actual).map(([key, value]) => [key, Number(value.toFixed(4))]),
     ),
     expected,
   );

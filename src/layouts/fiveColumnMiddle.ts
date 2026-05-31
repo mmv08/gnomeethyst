@@ -26,11 +26,7 @@ const RATIOS = {
 export const fiveColumnMiddleLayout: DynamicLayout = {
   key: '5column-middle',
   name: '5Column Middle',
-  assign(
-    windows: ManagedWindow[],
-    workArea: Rect,
-    _state: LayoutState,
-  ): Map<string, Rect> {
+  assign(windows: ManagedWindow[], workArea: Rect, _state: LayoutState): Map<string, Rect> {
     if (windows.length === 0) return new Map();
 
     const outerWidth = workArea.width * RATIOS.outer;
@@ -80,12 +76,7 @@ export const fiveColumnMiddleLayout: DynamicLayout = {
       outerLeft: [],
       outerRight: [],
     };
-    const order = [
-      'innerLeft',
-      'innerRight',
-      'outerLeft',
-      'outerRight',
-    ] as const;
+    const order = ['innerLeft', 'innerRight', 'outerLeft', 'outerRight'] as const;
     windows.slice(1).forEach((window, index) => {
       columns[order[index % order.length]!].push(window);
     });

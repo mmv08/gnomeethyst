@@ -63,10 +63,7 @@ declare module 'resource:///org/gnome/shell/ui/main.js' {
     disconnect(id: number): void;
   };
 
-  export function activateWindow(
-    window: Meta.Window,
-    timestamp?: number,
-  ): void;
+  export function activateWindow(window: Meta.Window, timestamp?: number): void;
 
   export function notify(title: string, body: string): void;
 }

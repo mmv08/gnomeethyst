@@ -8,10 +8,7 @@ import {
 } from '../state/windowOrder';
 
 test('reconcileWindowOrder preserves existing order and appends new windows', () => {
-  assert.deepEqual(
-    reconcileWindowOrder(['b', 'a', 'missing'], ['a', 'b', 'c']),
-    ['b', 'a', 'c'],
-  );
+  assert.deepEqual(reconcileWindowOrder(['b', 'a', 'missing'], ['a', 'b', 'c']), ['b', 'a', 'c']);
 });
 
 test('nextIdInOrder wraps around', () => {

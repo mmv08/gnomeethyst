@@ -37,13 +37,11 @@ export default class GnomeethystExtension extends Extension {
         'cycle-layout-backward': () => this.reflowController?.cycleLayout(-1),
         'select-tall-layout': () => this.reflowController?.selectLayout('tall'),
         'select-wide-layout': () => this.reflowController?.selectLayout('wide'),
-        'select-fullscreen-layout': () =>
-          this.reflowController?.selectLayout('fullscreen'),
+        'select-fullscreen-layout': () => this.reflowController?.selectLayout('fullscreen'),
         'select-column-layout': () => this.reflowController?.selectLayout('column'),
         'select-3column-mid-focus-layout': () =>
           this.reflowController?.selectLayout('3column-mid-focus'),
-        'select-5column-middle-layout': () =>
-          this.reflowController?.selectLayout('5column-middle'),
+        'select-5column-middle-layout': () => this.reflowController?.selectLayout('5column-middle'),
         'shrink-main': () => this.reflowController?.resizeMainPane(-1),
         'expand-main': () => this.reflowController?.resizeMainPane(1),
         'increase-main': () => this.reflowController?.changeMainPaneCount(1),
@@ -56,8 +54,7 @@ export default class GnomeethystExtension extends Extension {
         'toggle-float': () => this.reflowController?.toggleFloat(),
         'toggle-tiling': () => this.reflowController?.toggleTiling(),
         reflow: () => this.reflowController?.scheduleReflow(),
-        'display-current-layout': () =>
-          this.reflowController?.displayCurrentLayout(),
+        'display-current-layout': () => this.reflowController?.displayCurrentLayout(),
       });
 
       this.keybindings.enable();

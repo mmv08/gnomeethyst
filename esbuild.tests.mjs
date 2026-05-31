@@ -14,10 +14,7 @@ await Promise.all(
     esbuild.build({
       entryPoints: [entryPoint],
       bundle: true,
-      outfile: join(
-        'dist-tests',
-        entryPoint.split('/').pop().replace(/\.ts$/, '.mjs'),
-      ),
+      outfile: join('dist-tests', entryPoint.split('/').pop().replace(/\.ts$/, '.mjs')),
       format: 'esm',
       platform: 'node',
       target: 'node24',

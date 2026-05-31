@@ -27,10 +27,8 @@ function nearlyEqual(a: number, b: number): boolean {
  * the configured gap so neighboring windows share the spacing evenly.
  */
 function insetRect(rect: Rect, workArea: Rect, gaps: GapValues): Rect {
-  const left =
-    rect.x <= workArea.x + 1 ? gaps.outerGap : Math.floor(gaps.innerGap / 2);
-  const top =
-    rect.y <= workArea.y + 1 ? gaps.outerGap : Math.floor(gaps.innerGap / 2);
+  const left = rect.x <= workArea.x + 1 ? gaps.outerGap : Math.floor(gaps.innerGap / 2);
+  const top = rect.y <= workArea.y + 1 ? gaps.outerGap : Math.floor(gaps.innerGap / 2);
   const right =
     rect.x + rect.width >= workArea.x + workArea.width - 1
       ? gaps.outerGap

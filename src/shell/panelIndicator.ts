@@ -36,17 +36,14 @@ export class PanelIndicator {
 
     this.button.add_child(this.label);
     this.addMenuItems(actions);
-    this.button.connect(
-      'button-press-event',
-      (_actor: unknown, event: unknown) => {
-        if ((event as ButtonEvent).get_button() !== Clutter.BUTTON_SECONDARY) {
-          return Clutter.EVENT_PROPAGATE;
-        }
+    this.button.connect('button-press-event', (_actor: unknown, event: unknown) => {
+      if ((event as ButtonEvent).get_button() !== Clutter.BUTTON_SECONDARY) {
+        return Clutter.EVENT_PROPAGATE;
+      }
 
-        this.button.menu.open();
-        return Clutter.EVENT_STOP;
-      },
-    );
+      this.button.menu.open();
+      return Clutter.EVENT_STOP;
+    });
     Main.panel.addToStatusArea('gnomeethyst', this.button);
   }
 

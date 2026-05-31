@@ -43,7 +43,9 @@ export class Keybindings {
    * Removes only bindings this instance registered.
    */
   destroy(): void {
-    this.registered.forEach((name) => Main.wm.removeKeybinding(name));
+    this.registered.forEach((name) => {
+      Main.wm.removeKeybinding(name);
+    });
     this.registered.clear();
   }
 }
