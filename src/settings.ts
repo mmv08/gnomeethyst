@@ -7,6 +7,13 @@ import {
   type LayoutState,
 } from './layouts/types';
 
+/**
+ * GSettings key names that are registered as GNOME Shell keybindings.
+ *
+ * @remarks
+ * The schema stores shortcuts as string arrays. Keeping this list central lets
+ * registration and cleanup stay symmetrical as commands are added.
+ */
 export const keybindings = [
   'cycle-layout-forward',
   'cycle-layout-backward',
@@ -31,6 +38,13 @@ export const keybindings = [
   'display-current-layout',
 ] as const;
 
+/**
+ * Typed facade over the extension's GSettings schema.
+ *
+ * @remarks
+ * The wrapper clamps layout values at the boundary so layout implementations
+ * can stay focused on geometry rather than schema validation.
+ */
 export class GnomeethystSettings {
   constructor(readonly settings: Gio.Settings) {}
 

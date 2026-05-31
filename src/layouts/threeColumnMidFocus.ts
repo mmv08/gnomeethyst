@@ -11,6 +11,17 @@ const MAIN_WIDTH_RATIO = 0.62;
 const SMALL_SCREEN_WIDTH = 1400;
 const SMALL_SCREEN_MAIN_WIDTH_RATIO = 0.55;
 
+/**
+ * Custom center-focus layout ported from the macOS Amethyst dotfiles.
+ *
+ * @remarks
+ * The first window is intentionally privileged as the center/main window.
+ * Remaining windows alternate left/right so both side columns grow evenly.
+ * Below 1400px the layout falls back to a simpler two-pane split because the
+ * side gutters become too narrow to be useful.
+ *
+ * @see https://github.com/mmv08/dotfiles-macos/blob/d3695feff2190e1fafc6fc508378817adc13d65b/dotfiles-meta/amethyst/Layouts/3column-mid-focus.js
+ */
 export const threeColumnMidFocusLayout: DynamicLayout = {
   key: '3column-mid-focus',
   name: '3Column Mid Focus',

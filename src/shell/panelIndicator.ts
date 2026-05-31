@@ -14,6 +14,14 @@ type ButtonEvent = {
   get_button(): number;
 };
 
+/**
+ * Panel affordance for current layout state and emergency controls.
+ *
+ * @remarks
+ * The menu actions call back into the extension rather than importing the
+ * controller directly. That keeps this class UI-only and lets the extension
+ * manager disable path remain in the lifecycle entrypoint.
+ */
 export class PanelIndicator {
   private readonly button: PanelMenu.Button;
   private readonly label: St.Label;
@@ -46,10 +54,16 @@ export class PanelIndicator {
     this.label.set_text(tilingEnabled ? name : `${name} off`);
   }
 
+  /**
+   * Destroys the panel button and its menu.
+   */
   destroy(): void {
     this.button.destroy();
   }
 
+  /**
+   * Adds operational menu items useful while iterating on a live Shell extension.
+   */
   private addMenuItems(actions: PanelIndicatorActions): void {
     const toggleTiling = new PopupMenu.PopupMenuItem('Toggle Tiling');
     toggleTiling.connect('activate', actions.onToggleTiling);

@@ -9,6 +9,13 @@ import {
   type Rect,
 } from './types';
 
+/**
+ * Amethyst's Wide layout: the Tall layout rotated ninety degrees.
+ *
+ * @remarks
+ * The main pane spans the top of the work area. Secondary windows split the
+ * bottom pane horizontally, matching the layout muscle memory from Amethyst.
+ */
 export const wideLayout: DynamicLayout = {
   key: 'wide',
   name: 'Wide',

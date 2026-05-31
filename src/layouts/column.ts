@@ -9,6 +9,14 @@ import {
   type Rect,
 } from './types';
 
+/**
+ * Full-height column layout.
+ *
+ * @remarks
+ * Unlike Tall, both the main and secondary panes split horizontally. This keeps
+ * every managed window full height while still allowing the "main" group to be
+ * widened with the shared pane-ratio controls.
+ */
 export const columnLayout: DynamicLayout = {
   key: 'column',
   name: 'Column',

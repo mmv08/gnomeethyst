@@ -13,6 +13,16 @@ const RATIOS = {
   main: 0.34,
 };
 
+/**
+ * Custom ultrawide layout ported from the macOS Amethyst dotfiles.
+ *
+ * @remarks
+ * The center column is the main area. Extra windows fill the inner columns
+ * before the outer columns, which keeps the most recently important secondary
+ * windows near the focused center on wide displays.
+ *
+ * @see https://github.com/mmv08/dotfiles-macos/blob/d3695feff2190e1fafc6fc508378817adc13d65b/dotfiles-meta/amethyst/Layouts/5column-middle.js
+ */
 export const fiveColumnMiddleLayout: DynamicLayout = {
   key: '5column-middle',
   name: '5Column Middle',

@@ -1,3 +1,11 @@
+/**
+ * Minimal GNOME Shell globals used by Gnomeethyst.
+ *
+ * @remarks
+ * These declarations are intentionally local shims, not an attempt to model the
+ * complete Shell API. Prefer adding only the members the extension actually
+ * consumes so drift across Shell versions stays visible.
+ */
 declare const global: {
   display: import('gi://Meta').Display;
   get_current_time(): number;
@@ -8,6 +16,9 @@ declare const global: {
   window_manager?: unknown;
 };
 
+/**
+ * Local declaration for the extension base class imported from Shell resources.
+ */
 declare module 'resource:///org/gnome/shell/extensions/extension.js' {
   import Gio from 'gi://Gio';
 
@@ -19,6 +30,9 @@ declare module 'resource:///org/gnome/shell/extensions/extension.js' {
   }
 }
 
+/**
+ * Minimal `ui/main.js` surface used by the Shell integration layer.
+ */
 declare module 'resource:///org/gnome/shell/ui/main.js' {
   import Meta from 'gi://Meta';
 
@@ -57,6 +71,9 @@ declare module 'resource:///org/gnome/shell/ui/main.js' {
   export function notify(title: string, body: string): void;
 }
 
+/**
+ * Minimal `PanelMenu.Button` shape used by the panel indicator.
+ */
 declare module 'resource:///org/gnome/shell/ui/panelMenu.js' {
   export class Button {
     menu: {
@@ -70,6 +87,9 @@ declare module 'resource:///org/gnome/shell/ui/panelMenu.js' {
   }
 }
 
+/**
+ * Minimal popup menu declarations for indicator actions.
+ */
 declare module 'resource:///org/gnome/shell/ui/popupMenu.js' {
   export class PopupMenuItem {
     constructor(text: string);

@@ -5,6 +5,13 @@ import { keybindings, type GnomeethystSettings } from './settings';
 
 type BindingHandler = () => void;
 
+/**
+ * Owns GNOME Shell keybinding registration for the extension lifecycle.
+ *
+ * @remarks
+ * `Main.wm.addKeybinding` is global shell state. Tracking the names we register
+ * keeps disable/reload cleanup deterministic during extension development.
+ */
 export class Keybindings {
   private readonly registered = new Set<string>();
 
@@ -13,6 +20,9 @@ export class Keybindings {
     private readonly handlers: Partial<Record<(typeof keybindings)[number], BindingHandler>>,
   ) {}
 
+  /**
+   * Registers configured handlers against GSettings-backed shortcuts.
+   */
   enable(): void {
     keybindings.forEach((name) => {
       const handler = this.handlers[name];
@@ -29,6 +39,9 @@ export class Keybindings {
     });
   }
 
+  /**
+   * Removes only bindings this instance registered.
+   */
   destroy(): void {
     this.registered.forEach((name) => Main.wm.removeKeybinding(name));
     this.registered.clear();

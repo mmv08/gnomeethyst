@@ -3,6 +3,14 @@ import Meta from 'gi://Meta';
 const fallbackWindowIds = new WeakMap<Meta.Window, string>();
 let nextFallbackWindowId = 1;
 
+/**
+ * Decides whether Gnomeethyst should manage a GNOME Shell window.
+ *
+ * @remarks
+ * The filter is intentionally conservative. Dialogs, transient windows,
+ * override-redirect surfaces, and skip-taskbar utility windows are more likely
+ * to break workflows when tiled than when left floating.
+ */
 export function shouldManageWindow(window: Meta.Window): boolean {
   const candidate = window as Meta.Window & {
     is_override_redirect?: () => boolean;
@@ -23,6 +31,15 @@ export function shouldManageWindow(window: Meta.Window): boolean {
   );
 }
 
+/**
+ * Produces a stable id for preserving order and floating state.
+ *
+ * @remarks
+ * Prefer Mutter's stable sequence when available, fall back to older window ids,
+ * and finally use a `WeakMap` identity. The `WeakMap` fallback is deliberately
+ * not geometry-based: geometry changes during tiling, and using it as identity
+ * would make order state drift.
+ */
 export function windowId(window: Meta.Window): string {
   const candidate = window as Meta.Window & {
     get_stable_sequence?: () => number;

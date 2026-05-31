@@ -9,6 +9,14 @@ import {
   type LayoutState,
 } from './types';
 
+/**
+ * Amethyst's Tall layout: main pane on the left, secondary pane on the right.
+ *
+ * @remarks
+ * The first `mainPaneCount` windows keep main-pane status. Additional windows
+ * stack vertically in the secondary pane so opening a new window reflows
+ * predictably without changing the established order.
+ */
 export const tallLayout: DynamicLayout = {
   key: 'tall',
   name: 'Tall',

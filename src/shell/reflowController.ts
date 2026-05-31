@@ -28,9 +28,18 @@ type FocusedScopeContext = {
   windows: Meta.Window[];
 };
 
+/**
+ * Short enough to feel immediate, long enough to collapse GNOME's bursty window
+ * signals during app startup.
+ */
 const REFLOW_DEBOUNCE_MS = 80;
 const MAIN_PANE_RATIO_STEP = 0.05;
 
+/**
+ * Returns the workspace manager across the camelCase/snake_case GJS transition.
+ *
+ * @internal
+ */
 function workspaceManager(): {
   get_active_workspace_index(): number;
   get_active_workspace(): Meta.Workspace;
@@ -43,6 +52,11 @@ function workspaceManager(): {
   ) as ReturnType<typeof workspaceManager>;
 }
 
+/**
+ * Returns the shell window manager across the camelCase/snake_case GJS transition.
+ *
+ * @internal
+ */
 function windowManager(): WindowManagerLike {
   return (
     (global as unknown as { windowManager?: unknown }).windowManager ??
@@ -50,6 +64,11 @@ function windowManager(): WindowManagerLike {
   ) as WindowManagerLike;
 }
 
+/**
+ * Converts GNOME's rectangle object into the pure layout rectangle type.
+ *
+ * @internal
+ */
 function rectFromMtk(rect: Mtk.Rectangle): Rect {
   return {
     x: rect.x,
@@ -59,6 +78,15 @@ function rectFromMtk(rect: Mtk.Rectangle): Rect {
   };
 }
 
+/**
+ * Coordinates GNOME Shell window state with the pure layout engine.
+ *
+ * @remarks
+ * The controller is the boundary between unstable Shell signals and stable
+ * layout math. It rebuilds visible window order from GNOME state when possible,
+ * persists only the small amount of session state we need, and debounces reflow
+ * because apps often emit create/show/size/position signals in quick succession.
+ */
 export class ReflowController {
   private readonly signals = new SignalStore();
   private readonly state = new WorkspaceStateStore();
@@ -70,6 +98,13 @@ export class ReflowController {
 
   constructor(private readonly settings: GnomeethystSettings) {}
 
+  /**
+   * Hooks global Shell signals and starts managing existing windows.
+   *
+   * @remarks
+   * `workareas-changed` lives on `global.display` in GNOME Shell 50; using the
+   * wrong object leaves partially initialized UI behind during extension reload.
+   */
   enable(): void {
     this.signals.connect(global.display, 'window-created', (_display, window) => {
       this.watchWindow(window as Meta.Window);
@@ -107,11 +142,17 @@ export class ReflowController {
     this.scheduleReflow();
   }
 
+  /**
+   * Registers a UI callback for layout/status changes.
+   */
   onLayoutChanged(callback: (layoutName: string, enabled: boolean) => void): void {
     this.layoutChangedCallback = callback;
     this.emitLayoutChanged();
   }
 
+  /**
+   * Disconnects all Shell signals and clears session-only layout state.
+   */
   destroy(): void {
     if (this.reflowTimerId) {
       GLib.source_remove(this.reflowTimerId);
@@ -125,6 +166,13 @@ export class ReflowController {
     this.state.reset();
   }
 
+  /**
+   * Schedules a debounced layout pass.
+   *
+   * @remarks
+   * Calls made while applying frames are ignored to avoid reacting to our own
+   * `move_resize_frame()` operations.
+   */
   scheduleReflow(): void {
     if (this.applyingFrames) return;
     if (this.reflowTimerId) GLib.source_remove(this.reflowTimerId);
@@ -140,11 +188,17 @@ export class ReflowController {
     );
   }
 
+  /**
+   * Persists and activates a specific layout.
+   */
   selectLayout(layoutKey: LayoutKey): void {
     this.settings.currentLayout = layoutKey;
     this.scheduleReflow();
   }
 
+  /**
+   * Moves through the configured layout cycle.
+   */
   cycleLayout(direction: -1 | 1): void {
     const cycle = this.settings.layoutCycle;
     const current = this.settings.currentLayout;
@@ -153,17 +207,30 @@ export class ReflowController {
     this.selectLayout(cycle[nextIndex]!);
   }
 
+  /**
+   * Adjusts the main pane ratio by the Amethyst-style resize step.
+   */
   resizeMainPane(delta: number): void {
     this.settings.mainPaneRatio =
       this.settings.layoutState.mainPaneRatio + delta * MAIN_PANE_RATIO_STEP;
     this.scheduleReflow();
   }
 
+  /**
+   * Adjusts the number of windows assigned to the main pane.
+   */
   changeMainPaneCount(delta: number): void {
     this.settings.mainPaneCount = this.settings.layoutState.mainPaneCount + delta;
     this.scheduleReflow();
   }
 
+  /**
+   * Focuses the next or previous tiled window in managed order.
+   *
+   * @remarks
+   * The active scope is reconciled first so a key press immediately after a new
+   * window appears does not depend on a previous reflow having completed.
+   */
   focusWindow(delta: -1 | 1): void {
     const { focusedId, state, windows } = this.focusedScopeContext();
     const nextId = nextIdInOrder(state.orderedWindowIds, focusedId, delta);
@@ -173,6 +240,9 @@ export class ReflowController {
     if (nextWindow) Main.activateWindow(nextWindow, global.get_current_time());
   }
 
+  /**
+   * Swaps the focused window with its neighbor in managed order.
+   */
   swapWindow(delta: -1 | 1): void {
     const { focusedId, state } = this.focusedScopeContext();
     if (!focusedId) return;
@@ -181,6 +251,9 @@ export class ReflowController {
     this.scheduleReflow();
   }
 
+  /**
+   * Promotes the focused window to the main pane.
+   */
   swapFocusedWithMain(): void {
     const { focusedId, state } = this.focusedScopeContext();
     if (!focusedId) return;
@@ -189,6 +262,9 @@ export class ReflowController {
     this.scheduleReflow();
   }
 
+  /**
+   * Toggles session-local floating state for the focused window.
+   */
   toggleFloat(): void {
     const { focused, state } = this.focusedScopeContext();
     if (!focused || !shouldManageWindow(focused)) return;
@@ -199,11 +275,17 @@ export class ReflowController {
     this.scheduleReflow();
   }
 
+  /**
+   * Toggles whether Gnomeethyst actively applies layouts.
+   */
   toggleTiling(): void {
     this.settings.tilingEnabled = !this.settings.tilingEnabled;
     this.scheduleReflow();
   }
 
+  /**
+   * Shows a transient Shell notification for the current layout state.
+   */
   displayCurrentLayout(): void {
     const layout = getLayout(this.settings.currentLayout);
     Main.notify(
@@ -213,6 +295,15 @@ export class ReflowController {
     this.emitLayoutChanged();
   }
 
+  /**
+   * Computes and applies frames for all managed windows on active workspace monitors.
+   *
+   * @remarks
+   * Reflow is intentionally pull-based: every pass asks GNOME for currently
+   * visible windows, reconciles the saved order, and derives assignments from
+   * pure layout code. This keeps recovery simple after app crashes, late Chrome
+   * placement changes, or monitor/workarea updates.
+   */
   reflow(): void {
     this.emitLayoutChanged();
     if (!this.settings.tilingEnabled) return;
@@ -272,11 +363,22 @@ export class ReflowController {
     }
   }
 
+  /**
+   * Emits the current layout status to the panel indicator.
+   */
   private emitLayoutChanged(): void {
     const layout = getLayout(this.settings.currentLayout);
     this.layoutChangedCallback?.(layout.name, this.settings.tilingEnabled);
   }
 
+  /**
+   * Watches a window for lifecycle and late-placement events.
+   *
+   * @remarks
+   * Chrome can resize to the requested frame but later recenter itself during
+   * startup. Listening to `shown`, `position-changed`, and `size-changed` lets
+   * the debounced reflow correct that final position without app-specific code.
+   */
   private watchWindow(window: Meta.Window): void {
     if (this.windowSignals.has(window)) return;
     const signalIds = [
@@ -291,6 +393,9 @@ export class ReflowController {
     this.windowSignals.set(window, signalIds);
   }
 
+  /**
+   * Returns reconciled state and windows for the focused monitor/workspace.
+   */
   private focusedScopeContext(): FocusedScopeContext {
     const focused = global.display.focus_window ?? null;
     const workspace = workspaceManager().get_active_workspace();
@@ -311,6 +416,9 @@ export class ReflowController {
     };
   }
 
+  /**
+   * Lists windows that belong to one workspace/monitor tiling scope.
+   */
   private windowsForScope(
     workspace: Meta.Workspace,
     monitorIndex: number,

@@ -1,3 +1,14 @@
+/**
+ * Preserves known window order while admitting newly visible windows.
+ *
+ * @remarks
+ * GNOME is the source of truth for which windows currently exist; this helper
+ * only preserves the user-visible order choices Gnomeethyst owns.
+ *
+ * @example
+ * reconcileWindowOrder(['b', 'a', 'missing'], ['a', 'b', 'c'])
+ * // => ['b', 'a', 'c']
+ */
 export function reconcileWindowOrder(
   existingIds: string[],
   visibleIds: string[],
@@ -9,11 +20,21 @@ export function reconcileWindowOrder(
   return [...preserved, ...added];
 }
 
+/**
+ * Wraps indexes for cyclic focus and swap operations.
+ *
+ * @internal
+ */
 export function wrapIndex(index: number, length: number): number {
   if (length <= 0) return -1;
   return ((index % length) + length) % length;
 }
 
+/**
+ * Selects the neighboring id in a cyclic window order.
+ *
+ * @internal
+ */
 export function nextIdInOrder(
   ids: string[],
   currentId: string | undefined,
@@ -24,6 +45,11 @@ export function nextIdInOrder(
   return ids[wrapIndex(index + delta, ids.length)];
 }
 
+/**
+ * Swaps the focused window with its cyclic neighbor.
+ *
+ * @internal
+ */
 export function swapInOrder(
   ids: string[],
   currentId: string,
@@ -40,6 +66,11 @@ export function swapInOrder(
   return next;
 }
 
+/**
+ * Promotes the focused window into the main position.
+ *
+ * @internal
+ */
 export function swapWithMain(ids: string[], currentId: string): string[] {
   const currentIndex = ids.indexOf(currentId);
   if (currentIndex <= 0) return ids;

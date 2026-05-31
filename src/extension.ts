@@ -5,6 +5,14 @@ import { GnomeethystSettings } from './settings';
 import { ReflowController } from './shell/reflowController';
 import { PanelIndicator } from './shell/panelIndicator';
 
+/**
+ * GNOME Shell extension entrypoint.
+ *
+ * @remarks
+ * GNOME calls `enable()` and `disable()` across live reloads. `enable()` is
+ * intentionally guarded so a startup failure tears down partial Shell UI and
+ * keybindings instead of leaving stale state until the next logout.
+ */
 export default class GnomeethystExtension extends Extension {
   private settingsWrapper: GnomeethystSettings | null = null;
   private reflowController: ReflowController | null = null;
